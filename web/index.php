@@ -36,9 +36,6 @@ function sendNotification($title, $token)
 
 function sendToDevices($title, $city)
 {
-  //echo $city;
-  //echo "<br>";
-  //Firestore code goes here
   $curl = curl_init();
 
   curl_setopt_array($curl, array(
@@ -62,17 +59,12 @@ function sendToDevices($title, $city)
   if ($err) {
     echo "cURL Error #:" . $err;
   } else {
-    //echo $response;
     $obj = json_decode($response);
-    //print_r($obj);
 
     foreach ($obj->documents as $document) {
       $token = $document->fields->token->stringValue;
-      //echo "Token" . $token;
       sendNotification($title, $token);
-      //var_dump($token->stringValue);
     }
-    //var_dump(json_decode($response));
   }
 
 
@@ -100,24 +92,6 @@ function getDeals()
     array("https://ywgdeals.com/atom/1", "Winnipeg")
   );
 
-  /*$urls = array(
-    "https://ydeals.com/atom/1",
-    "https://yycdeals.com/atom/1",
-    "https://yegdeals.com/atom/1",
-    "https://yhzdeals.com/atom/1",
-    "https://ylwdeals.com/atom/1",
-    "https://yxudeals.com/atom/1",
-    "https://yuldeals.com/atom/1",
-    "https://yowdeals.com/atom/1",
-    "https://yqrdeals.com/atom/1",
-    "https://yxedeals.com/atom/1",
-    "https://yytdeals.com/atom/1",
-    "https://yqtdeals.com/atom/1",
-    "https://yyzdeals.com/atom/1",
-    "https://yvrdeals.com/atom/1",
-    "https://ywgdeals.com/atom/1"
-  );*/
-  //$url = 'http://yuldeals.com/atom/1';
   date_default_timezone_set('America/Vancouver');
 
 
@@ -129,36 +103,17 @@ function getDeals()
 
     $now = date("Y-m-d\TH:i:s-07:00");
 
-    /*if ($title == "2-in-1 trips: Vancouver / Victoria to Tokyo, Japan *and* Hong Kong - $633 CAD roundtrip | ANA flights") {
-      sendToDevices($title, $city);
-    }*/
-
-    //echo $updated;
-    //echo "<br>";
-
     if ($now <= $updated) {
       sendToDevices($title, $city);
-      //echo "<br>" . "New Deal!";
-      //echo "<br>" . $title;
-      //getDevices($city);
-      /*echo "<br>" . $updated;
-      echo "<br>" . $now;
-      echo "<br>" . $title;*/
     } else {
-      //sendToDevices($title, $city);
-      //echo "<br>" . "Not a new deal";
-      //echo "<br>" . $now;
-      //echo "<br>" . $title;
-      /*echo "<br>" . $updated;
-      
-      echo "<br>" . $title;*/
+      //do nothing
     }
   }
 }
 
 
 getDeals();
-//phpinfo();
 
+echo getcwd();
 
 ?>
