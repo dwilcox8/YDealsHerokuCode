@@ -114,6 +114,6 @@ function getDeals()
 
 getDeals();
 
-echo getcwd();
+//echo getcwd();
 
 ?>
