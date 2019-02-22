@@ -12,15 +12,12 @@ function sendNotification($title, $token)
     CURLOPT_TIMEOUT => 30,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => "POST",
-    CURLOPT_POSTFIELDS => "{\r\n \"to\" : \"$token\",\r\n \"notification\" : {\r\n     \"body\" : \"$title\",\r\n     \"title\": \"New Travel Deal Available\"\r\n }\r\n}",
+    CURLOPT_POSTFIELDS => "{\n\"registration_ids\": [\n$token],\n\"notification\": {\n\"title\": \"New Travel Deal Available\",\n\"body\": \"$title\",\n\"badge\": \"1\",\n\"icon\": \"ic_airplane\"\n}\n}",
     CURLOPT_HTTPHEADER => array(
       "Authorization: key=AIzaSyC5BtBwngkWfujJPxPoZd3Rt-lnZCPZrnE",
       "Content-Type: application/json",
     ),
   ));
-
-//"Authorization: key=AIzaSyAuF0x_jr9nk_01x5zComJMHi_bwj7nFSk",
-  # code...
 
   $response = curl_exec($curl);
   $err = curl_error($curl);
@@ -30,12 +27,17 @@ function sendNotification($title, $token)
   if ($err) {
     echo "cURL Error #:" . $err;
   } else {
-    //echo $response;
+
   }
 }
 
 function sendToDevices($title, $city)
 {
+  $tokens = "";
+  $count = 1;
+
+  //echo $city;
+
   $curl = curl_init();
 
   curl_setopt_array($curl, array(
@@ -47,6 +49,7 @@ function sendToDevices($title, $city)
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => "GET",
     CURLOPT_HTTPHEADER => array(
+      "Cache-Control: no-cache",
       "Content-Type: application/json",
     ),
   ));
@@ -60,11 +63,25 @@ function sendToDevices($title, $city)
     echo "cURL Error #:" . $err;
   } else {
     $obj = json_decode($response);
+    $total = count($obj->documents);
 
     foreach ($obj->documents as $document) {
       $token = $document->fields->token->stringValue;
-      sendNotification($title, $token);
+
+      if ($count < $total) {
+        $tokens .= "\"$token\",\n";
+      }
+
+      if ($count == $total) {
+        $tokens .= "\"$token\"\n";
+      }
+
+      $count++;
+      
+      //sendNotification($title, $token);
     }
+
+    sendNotification($title, $tokens);
   }
 
 
@@ -107,6 +124,7 @@ function getDeals()
       sendToDevices($title, $city);
     } else {
       //do nothing
+      //sendToDevices($title, $city);
     }
   }
 }
