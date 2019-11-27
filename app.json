@@ -1,6 +1,5 @@
 {
-  "name": "Start on Heroku: PHP",
-  "description": "A barebones PHP app that makes use of the Silex web framework",
-  "repository": "https://github.com/heroku/php-getting-started",
+  "name": "YDeals Heroku Code",
+  "description": "A simple PHP app that polls the YDeals RSS feeds for any new deals",
   "addons": []
 }
