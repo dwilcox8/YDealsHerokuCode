@@ -14,7 +14,7 @@ function sendNotification($title, $token)
     CURLOPT_CUSTOMREQUEST => "POST",
     CURLOPT_POSTFIELDS => "{\n\"registration_ids\": [\n$token],\n\"notification\": {\n\"title\": \"New Travel Deal Available\",\n\"body\": \"$title\",\n\"badge\": \"1\",\n\"icon\": \"ic_airplane\"\n}\n}",
     CURLOPT_HTTPHEADER => array(
-      "Authorization: key=AIzaSyC5BtBwngkWfujJPxPoZd3Rt-lnZCPZrnE",
+      "Authorization: key=...",
       "Content-Type: application/json",
     ),
   ));
@@ -36,12 +36,10 @@ function sendToDevices($title, $city)
   $tokens = "";
   $count = 1;
 
-  //echo $city;
-
   $curl = curl_init();
 
   curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://firestore.googleapis.com/v1/projects/ydeals-98439/databases/%28default%29/documents/" . $city . "/?key={YOUR_API_KEY}",
+    CURLOPT_URL => "https://firestore.googleapis.com/.../documents/" . $city . "/?key=...",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
@@ -78,15 +76,15 @@ function sendToDevices($title, $city)
 
       $count++;
       
-      //sendNotification($title, $token);
     }
 
     sendNotification($title, $tokens);
   }
-
-
 }
 
+/**
+ ** Go through each RSS feed and look for any new deals
+ **/
 function getDeals()
 {
   $counter = 0;
@@ -124,14 +122,11 @@ function getDeals()
       sendToDevices($title, $city);
     } else {
       //do nothing
-      //sendToDevices($title, $city);
     }
   }
 }
 
 
 getDeals();
-
-//echo getcwd();
 
 ?>
